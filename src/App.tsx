@@ -6,15 +6,8 @@ import Favoritos from './pages/Favoritos';
 import Sobre from './pages/Sobre';
 import Login from './pages/Login';
 
-interface Receita {
-  image: string;
-  title: string;
-  time: string;
-  servings: string;
-}
-
 const App = () => {
-  const popularRecipes: Receita[] = [];
+  const [] = [];
 
 
 

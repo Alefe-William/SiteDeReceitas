@@ -3,6 +3,7 @@ import "./styles.css";
 import Search from "../../components/Search";
 import Footer from "../../components/Footer";
 import { getPopularRecipes, getQuickRecipes } from "../../services/Recipes";
+import axios, { AxiosError } from "axios";
 
 interface Receita {
   image: string;
@@ -21,6 +22,7 @@ const Home = () => {
     async function load() {
       try {
         setLoading(true);
+        setError(null);
 
         const [populares, rapidas] = await Promise.all([
           getPopularRecipes(),
@@ -29,8 +31,19 @@ const Home = () => {
 
         setPopularRecipes(populares);
         setQuickRecipes(rapidas);
-      } catch (err: any) {
-        setError("Erro ao carregar receitas.");
+      } catch (err: unknown) {
+        console.error("Erro ao carregar receitas:", err);
+
+        if (axios.isAxiosError(err)) {
+          const axiosErr = err as AxiosError<{ message?: string }>;
+          setError(
+            axiosErr.response?.data?.message ||
+              axiosErr.message ||
+              "Erro ao carregar receitas."
+          );
+        } else {
+          setError("Erro ao carregar receitas.");
+        }
       } finally {
         setLoading(false);
       }

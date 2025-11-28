@@ -1,17 +1,18 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import './styles.css';
-import Search from '../../components/Search';
-import Footer from '../../components/Footer';
+import "./styles.css";
+import Search from "../../components/Search";
+import Footer from "../../components/Footer";
 import { loginUser } from "../../services/Auth";
+import axios, { AxiosError } from "axios";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);  
-  const [error, setError] = useState<string | null>(null); 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,19 +21,27 @@ const Login = () => {
 
     try {
       const userData = await loginUser(email, password);
-      
-      console.log("Login OK:", userData);
 
+      console.log("Login OK:", userData);
       alert("Login realizado com sucesso!");
 
-      // Se o backend retornar token -> salve aqui
+      // Exemplo caso tenha token:
       // localStorage.setItem("token", userData.token);
 
-      navigate("/"); 
+      navigate("/");
+    } catch (err: unknown) {
+      console.error("Erro no login:", err);
 
-    } catch (err: any) {
-      console.error(err);
-      setError(err.response?.data?.error || "Erro ao realizar login.");
+      if (axios.isAxiosError(err)) {
+        const axiosErr = err as AxiosError<{ error?: string }>;
+        setError(
+          axiosErr.response?.data?.error ||
+            axiosErr.message ||
+            "Erro ao realizar login."
+        );
+      } else {
+        setError("Erro ao realizar login.");
+      }
     } finally {
       setLoading(false);
     }
@@ -41,7 +50,7 @@ const Login = () => {
   return (
     <>
       <div>
-        <Search/>
+        <Search />
       </div>
 
       <div className="login-container">
@@ -83,7 +92,7 @@ const Login = () => {
       </div>
 
       <div>
-        <Footer/>
+        <Footer />
       </div>
     </>
   );

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import axios, { AxiosError } from "axios";
 import Search from "../../components/Search";
 import Footer from "../../components/Footer";
-import { buscarCategoriasAPI } from "../../services/Category"; // caminho relativo ao seu projeto
+import { buscarCategoriasAPI } from "../../services/Category";
 
 interface Categoria {
   idCategory: string;
@@ -28,13 +28,22 @@ const Categorias = () => {
 
         const dados = await buscarCategoriasAPI();
         if (mounted) setCategorias(dados);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Erro ao buscar categorias:", err);
-        if (mounted) setError(
-          err.response?.data?.message ||
-          err.message ||
-          "Erro ao carregar categorias."
-        );
+
+        if (!mounted) return;
+        if (axios.isAxiosError(err)) {
+          const axiosErr = err as AxiosError<{ message?: string }>;
+
+          const mensagem =
+            axiosErr.response?.data?.message ||
+            axiosErr.message ||
+            "Erro ao carregar categorias.";
+
+          setError(mensagem);
+        } else {
+          setError("Erro inesperado ao carregar categorias.");
+        }
       } finally {
         if (mounted) setLoading(false);
       }
@@ -42,7 +51,6 @@ const Categorias = () => {
 
     carregar();
 
-    // cleanup para evitar setState em componente desmontado
     return () => {
       mounted = false;
     };
@@ -67,8 +75,14 @@ const Categorias = () => {
               key={cat.idCategory}
               role="button"
               tabIndex={0}
-              onClick={() => navigate(`/categoria/${encodeURIComponent(cat.strCategory)}`)}
-              onKeyDown={(e) => { if (e.key === "Enter") navigate(`/categoria/${encodeURIComponent(cat.strCategory)}`); }}
+              onClick={() =>
+                navigate(`/categoria/${encodeURIComponent(cat.strCategory)}`)
+              }
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  navigate(`/categoria/${encodeURIComponent(cat.strCategory)}`);
+                }
+              }}
               style={{ cursor: "pointer" }}
             >
               <img

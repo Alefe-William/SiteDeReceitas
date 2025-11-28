@@ -5,6 +5,7 @@ import Search from "../../components/Search";
 import Footer from "../../components/Footer";
 import { registerUser } from "../../services/Auth";
 import { Link } from "react-router-dom";
+import axios, { AxiosError } from "axios";
 
 const RegisterUser = () => {
   const [name, setName] = useState("");
@@ -24,10 +25,20 @@ const RegisterUser = () => {
       await registerUser(name, email, password);
 
       alert("Conta criada com sucesso!");
-      navigate("/login"); // redireciona para login
-    } catch (err: any) {
+      navigate("/login");
+    } catch (err: unknown) {
       console.error("Erro no cadastro:", err);
-      setError(err.response?.data?.error || "Não foi possível criar a conta.");
+
+      if (axios.isAxiosError(err)) {
+        const axiosErr = err as AxiosError<{ error?: string }>;
+        setError(
+          axiosErr.response?.data?.error ||
+            axiosErr.message ||
+            "Não foi possível criar a conta."
+        );
+      } else {
+        setError("Não foi possível criar a conta.");
+      }
     } finally {
       setLoading(false);
     }
@@ -90,11 +101,11 @@ const RegisterUser = () => {
         </form>
       </div>
 
-      
-        <div className="link-ok">
-          <p><Link to ="/Login">Já possui uma conta?</Link></p>
-        </div>
-     
+      <div className="link-ok">
+        <p>
+          <Link to="/Login">Já possui uma conta?</Link>
+        </p>
+      </div>
 
       <div>
         <Footer />

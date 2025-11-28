@@ -5,7 +5,8 @@ import { AuthContext } from "../Contexts/AuthContext";
 import "./styles.css";
 
 const Search = () => {
-  const { user } = useContext(AuthContext);
+  const auth = useContext(AuthContext);
+  const user = auth?.user ?? null;
 
   return (
     <header>
@@ -33,14 +34,16 @@ const Search = () => {
 
             {!user ? (
               <li>
-                <Link to="/Login">Entrar</Link>
+                <Link to="/Register">Entrar</Link>
               </li>
             ) : (
               <li className="user-info">
                 <img
                   src={
-                    user.avatar ||
-                    `https://ui-avatars.com/api/?name=${user.name}&background=ff6b00&color=fff`
+                    user.image ||
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                      user.name
+                    )}&background=ff6b00&color=fff`
                   }
                   className="user-avatar"
                   alt="Avatar"

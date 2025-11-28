@@ -1,18 +1,39 @@
 import { createContext, useEffect, useState } from "react";
 import { getLoggedUser } from "../services/Auth";
+import type { ReactNode } from "react";
 
-export const AuthContext = createContext<any>(null);
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  image?: string;
+}
 
-export const AuthProvider = ({ children }: any) => {
-  const [user, setUser] = useState<any>(null);
+interface AuthContextType {
+  user: User | null;
+  loading: boolean;
+  setUser: (user: User | null) => void;
+}
+
+export const AuthContext = createContext<AuthContextType | null>(null);
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
       try {
         const data = await getLoggedUser();
-        setUser(data);
-      } catch {
+
+        // Aqui, "data" é UNKNOWN até você revisar o tipo retornado pela API
+        setUser(data as User);
+      } catch (err: unknown) {
+        // erro desconhecido → garante TS safe
         setUser(null);
       } finally {
         setLoading(false);
