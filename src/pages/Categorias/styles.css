@@ -1,4 +1,3 @@
-
 .categorias-header {
   background-color: #ff6b00;
   color: white;
@@ -24,10 +23,10 @@
   padding: 20px;
   text-align: center;
   cursor: pointer;
-  transition: 0.25s ease-in-out;
+  transition: transform 0.25s, box-shadow 0.25s;
 }
 
-.categoria-card.hover {
+.categoria-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
@@ -35,9 +34,8 @@
 .categoria-img {
   width: 80px;
   height: 80px;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-bottom: 15px;
+  object-fit: contain;
+  margin-bottom: 10px;
 }
 
 .categoria-title {
@@ -45,4 +43,3 @@
   color: #333;
   margin: 0;
 }
-

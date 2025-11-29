@@ -4,8 +4,10 @@ import Search from "../../components/Search";
 import Footer from "../../components/Footer";
 import { getPopularRecipes, getQuickRecipes } from "../../services/Recipes";
 import axios, { AxiosError } from "axios";
+import { Link } from "react-router-dom";
 
 interface Receita {
+  _id: string;
   image: string;
   title: string;
   time: string;
@@ -36,6 +38,7 @@ const Home = () => {
 
         if (axios.isAxiosError(err)) {
           const axiosErr = err as AxiosError<{ message?: string }>;
+
           setError(
             axiosErr.response?.data?.message ||
               axiosErr.message ||
@@ -71,44 +74,60 @@ const Home = () => {
 
         {!loading && !error && (
           <>
+            {/* RECEITAS POPULARES */}
             <section className="recipe-section">
               <h3 className="section-title">Receitas populares</h3>
+
               <div className="recipe-grid">
-                {popularRecipes.map((recipe, index) => (
-                  <div className="recipe-card" key={index}>
+                {popularRecipes.map((recipe) => (
+                  <Link
+                    to={`/receita/${recipe._id}`}
+                    className="recipe-card"
+                    key={recipe._id}
+                  >
                     <div
                       className="recipe-image"
                       style={{ backgroundImage: `url(${recipe.image})` }}
                     ></div>
+
                     <div className="recipe-info">
                       <h4 className="recipe-title">{recipe.title}</h4>
+
                       <div className="recipe-meta">
                         <span>{recipe.time}</span>
                         <span>{recipe.servings}</span>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </section>
 
+            {/* RECEITAS RÁPIDAS */}
             <section className="recipe-section">
               <h3 className="section-title">Receitas rápidas</h3>
+
               <div className="recipe-grid">
-                {quickRecipes.map((recipe, index) => (
-                  <div className="recipe-card" key={index}>
+                {quickRecipes.map((recipe) => (
+                  <Link
+                    to={`/receita/${recipe._id}`}
+                    className="recipe-card"
+                    key={recipe._id}
+                  >
                     <div
                       className="recipe-image"
                       style={{ backgroundImage: `url(${recipe.image})` }}
                     ></div>
+
                     <div className="recipe-info">
                       <h4 className="recipe-title">{recipe.title}</h4>
+
                       <div className="recipe-meta">
                         <span>{recipe.time}</span>
                         <span>{recipe.servings}</span>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </section>
@@ -116,9 +135,7 @@ const Home = () => {
         )}
       </main>
 
-      <div>
-        <Footer />
-      </div>
+      <Footer />
     </>
   );
 };

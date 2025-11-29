@@ -1,106 +1,113 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios, { AxiosError } from "axios";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import Search from "../../components/Search";
 import Footer from "../../components/Footer";
-import { buscarCategoriasAPI } from "../../services/Category";
+import { getRecipesByCategory } from "../../services/Recipes";
+import "./styles.css";
 
-interface Categoria {
-  idCategory: string;
-  strCategory: string;
-  strCategoryThumb: string;
+interface Receita {
+  _id: string;
+  title: string;
+  image?: string;
+  time?: string;
+  servings?: string;
 }
 
 const Categorias = () => {
-  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const { nome } = useParams<{ nome: string }>();
+  const navigate = useNavigate();
+
+  const [receitas, setReceitas] = useState<Receita[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const navigate = useNavigate();
+  const categorias = [
+    { nome: "Frango", img: "https://cdn-icons-png.flaticon.com/512/6978/6978167.png" },
+    { nome: "Carne", img: "https://cdn-icons-png.flaticon.com/512/2541/2541030.png" },
+    { nome: "Sobremesa", img: "https://cdn-icons-png.flaticon.com/512/5347/5347946.png" },
+    { nome: "Rápidas", img: "https://cdn-icons-png.flaticon.com/512/8775/8775447.png" },
+    { nome: "Vegana", img: "https://cdn-icons-png.flaticon.com/512/5581/5581203.png" },
+    { nome: "Bebidas", img: "https://cdn-icons-png.flaticon.com/512/917/917940.png" },
+    { nome: "Massas", img: "https://cdn-icons-png.freepik.com/512/1669/1669082.png" }
+  ];
 
   useEffect(() => {
-    let mounted = true;
+    async function load() {
+      if (!nome) {
+        setReceitas([]);
+        setLoading(false);
+        return;
+      }
 
-    async function carregar() {
+      setLoading(true);
+      setError(null);
+
       try {
-        setLoading(true);
-        setError(null);
-
-        const dados = await buscarCategoriasAPI();
-        if (mounted) setCategorias(dados);
-      } catch (err: unknown) {
-        console.error("Erro ao buscar categorias:", err);
-
-        if (!mounted) return;
-        if (axios.isAxiosError(err)) {
-          const axiosErr = err as AxiosError<{ message?: string }>;
-
-          const mensagem =
-            axiosErr.response?.data?.message ||
-            axiosErr.message ||
-            "Erro ao carregar categorias.";
-
-          setError(mensagem);
-        } else {
-          setError("Erro inesperado ao carregar categorias.");
-        }
+        const data = await getRecipesByCategory(nome);
+        setReceitas(data || []);
+      } catch (err) {
+        console.error("Erro ao buscar receitas por categoria:", err);
+        setError("Erro ao carregar receitas.");
       } finally {
-        if (mounted) setLoading(false);
+        setLoading(false);
       }
     }
 
-    carregar();
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  if (loading) return <p className="loading">Carregando...</p>;
-  if (error) return <p className="error">{error}</p>;
+    load();
+  }, [nome]);
 
   return (
     <>
-      <div>
-        <Search />
-      </div>
+      <Search />
 
-      <div className="categorias-container">
-        <h2 className="section-title">Categorias</h2>
+      <div className="categoria-container">
+        <h2 className="categorias-header">Categorias</h2>
+        <div className="categoria-grid">
 
-        <div className="recipe-grid">
-          {categorias.map((cat) => (
-            <div
-              className="recipe-card"
-              key={cat.idCategory}
-              role="button"
-              tabIndex={0}
-              onClick={() =>
-                navigate(`/categoria/${encodeURIComponent(cat.strCategory)}`)
-              }
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  navigate(`/categoria/${encodeURIComponent(cat.strCategory)}`);
-                }
-              }}
-              style={{ cursor: "pointer" }}
-            >
-              <img
-                src={cat.strCategoryThumb}
-                alt={cat.strCategory}
-                className="recipe-image"
-              />
-              <div className="recipe-info">
-                <h3 className="recipe-title">{cat.strCategory}</h3>
-              </div>
+        {categorias.map((cat) => (
+          <div
+            key={cat.nome}
+            className="categoria-card"
+            onClick={() => navigate(`/categorias/${cat.nome}`)} // <-- CORRIGIDO
+          >
+            <img src={cat.img} alt={cat.nome} className="categoria-img" />
+            <h3 className="categoria-title">{cat.nome}</h3>
+          </div>
+        ))}
+        </div>
+
+        {nome && (
+          <>
+            <h2 style={{ marginTop: "30px" }}>Receitas de {nome}</h2>
+
+            {loading && <p>Carregando receitas...</p>}
+            {!loading && error && <p className="error">{error}</p>}
+            {!loading && !error && receitas.length === 0 && (
+              <p>Nenhuma receita encontrada.</p>
+            )}
+
+            <div className="recipe-grid">
+              {receitas.map((r) => (
+                <Link key={r._id} to={`/receita/${r._id}`} className="recipe-card">
+                  <div
+                    className="recipe-image"
+                    style={{ backgroundImage: `url(${r.image})` }}
+                  />
+                  <div className="recipe-info">
+                    <h4 className="recipe-title">{r.title}</h4>
+                    <div className="recipe-meta">
+                      <span>{r.time}</span>
+                      <span>{r.servings}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
-          ))}
-        </div>
-
-        <div>
-          <Footer />
-        </div>
+          </>
+        )}
       </div>
+
+      <Footer />
     </>
   );
 };

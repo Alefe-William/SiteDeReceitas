@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles.css";
 import Search from "../../components/Search";
 import Footer from "../../components/Footer";
 import { loginUser } from "../../services/Auth";
 import axios, { AxiosError } from "axios";
+import { AuthContext } from "../../Contexts/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ const Login = () => {
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
+  const auth = useContext(AuthContext);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,8 +27,8 @@ const Login = () => {
       console.log("Login OK:", userData);
       alert("Login realizado com sucesso!");
 
-      // Exemplo caso tenha token:
-      // localStorage.setItem("token", userData.token);
+      // 👉 Agora avisamos o AuthProvider:
+      auth?.setUser(userData);
 
       navigate("/");
     } catch (err: unknown) {
@@ -49,9 +51,7 @@ const Login = () => {
 
   return (
     <>
-      <div>
-        <Search />
-      </div>
+      <Search />
 
       <div className="login-container">
         <h2>Login</h2>
@@ -91,9 +91,7 @@ const Login = () => {
         </form>
       </div>
 
-      <div>
-        <Footer />
-      </div>
+      <Footer />
     </>
   );
 };
