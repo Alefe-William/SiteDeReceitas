@@ -1,73 +1,181 @@
-# React + TypeScript + Vite
+# GitHub – Aplicação Web de Receitas (CookHub)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Projeto desenvolvido utilizando **TypeScript + React** no frontend e **Node.js + Fastify + TypeScript** no backend.  
+O objetivo do sistema é permitir que usuários pesquisem receitas, naveguem por categorias, criem contas, façam login e salvem seus pratos favoritos.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📚 **Sumário**
+- Descrição Geral
+- Funcionalidades
+- Tecnologias Utilizadas
+- Estrutura do Projeto
+- Instalação e Uso
+- Rotas da API
+- Integrantes
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+# 🧾 **Descrição Geral**
+O **GitHub (CookHub)** é uma plataforma culinária criada no contexto acadêmico da disciplina de Framework com TypeScript e React.  
+Ele permite que usuários encontrem receitas de maneira rápida através de pesquisa, filtros por categorias e uma experiência completa de autenticação.
 
-## Expanding the ESLint configuration
+As telas do projeto incluem:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Página Inicial com receitas populares e recomendadas
+- Listagem de Categorias e receitas específicas
+- Login e Registro de Usuário
+- Página de Contatos com redes sociais
+- Página Sobre Nós com apresentação da equipe
+- Sistema de Favoritos do usuário autenticado
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# ⭐ **Funcionalidades**
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 🔍 **Frontend (CookHub Web)**
+- Pesquisar receitas pelo nome  
+- Listar categorias: Frango, Carne, Sobremesas, Vegana, Bebidas, etc.  
+- Visualizar receitas populares e recentes  
+- Criar conta, realizar login e logout  
+- Adicionar/Remover receitas aos favoritos  
+- Página “Sobre nós”  
+- Página de contatos  
+- Footer global com links de navegação  
+
+### 🖥️ **Backend (API REST com Fastify + TS)**
+- CRUD de receitas  
+- Autenticação JWT (login, registro, persistência)  
+- Middleware de verificação de usuário autenticado  
+- Rotas protegidas para favoritos  
+- Seeds para povoamento inicial do banco  
+- Models totalmente tipados com TypeScript  
+- Controllers organizados por domínio  
+
+---
+
+# 🛠️ **Tecnologias Utilizadas**
+
+### **Frontend**
+- React  
+- TypeScript  
+- React Router DOM  
+- Axios  
+- CSS  
+- Vite  
+
+### **Backend**
+- Node.js  
+- Fastify  
+- TypeScript  
+- Prisma ou Sequelize  
+- JWT  
+- bcrypt  
+- MySQL  
+
+---
+
+# 📁 **Estrutura do Projeto**
+
+### **Frontend**
+```
+src/
+ ├── components/
+ ├── pages/
+ ├── services/
+ ├── assets/
+ └── styles/
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### **Backend**
 ```
+src/
+ ├── config/
+ ├── controllers/
+ ├── middlewares/
+ ├── models/
+ ├── routes/
+ ├── services/
+ ├── seed/
+ └── server.ts
+```
+
+---
+
+# 🚀 **Instalação e Uso**
+
+## 📌 1. Clonar o Repositório
+```bash
+git clone https://github.com/seu-usuario/GitHub.git
+cd GitHub
+```
+
+## 📌 2. Instalar Dependências
+
+### Frontend
+```bash
+cd frontend
+npm install
+```
+
+### Backend
+```bash
+cd backend
+npm install
+```
+
+## 📌 3. Configurar Banco de Dados
+- Criar arquivo `.env`
+- Configurar credenciais
+- Executar seeds (se existir):
+```bash
+npm run seed
+```
+
+## 📌 4. Executar Backend
+```bash
+npm run dev
+```
+
+## 📌 5. Executar Frontend
+```bash
+npm run dev
+```
+
+Acesse em:
+
+👉 **http://localhost:5173**
+
+---
+
+# 🔌 **Rotas da API**
+
+### **Autenticação**
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| POST | `/auth/register` | Cria usuário |
+| POST | `/auth/login` | Login |
+| GET | `/auth/me` | Mantém sessão ativa |
+
+### **Receitas**
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| GET | `/recipes` | Lista receitas |
+| GET | `/recipes/:id` | Detalhes |
+| GET | `/recipes/category/:cat` | Categoria |
+
+### **Favoritos**
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| GET | `/favorites` | Lista favoritos |
+| POST | `/favorites/add/:id` | Adiciona |
+| DELETE | `/favorites/remove/:id` | Remove |
+
+---
+
+# 👥 **Integrantes**
+- Álefe William – 01548485  
+- Eduardo da Silva – 0185646  
+- João Victor Rodrigues – 01848069  
+- José Raimundo – 01747158  
+
