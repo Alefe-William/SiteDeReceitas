@@ -1,4 +1,8 @@
-# GitHub – Aplicação Web de Receitas (CookHub)
+![TypeScript](https://shields.io)
+![Fastify](https://shields.io)
+![REST API](https://shields.io)
+
+# Aplicação Web de Receitas (CookHub)
 
 Projeto desenvolvido utilizando **TypeScript + React** no frontend e **Node.js + Fastify + TypeScript** no backend.  
 O objetivo do sistema é permitir que usuários pesquisem receitas, naveguem por categorias, criem contas, façam login e salvem seus pratos favoritos.
