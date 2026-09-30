@@ -1,8 +1,8 @@
-###
+### 💻 Tecnologias
 
-![TypeScript](https://shields.io)
-![Fastify](https://shields.io)
-![REST API](https://shields.io)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Fastify](https://img.shields.io/badge/Fastify-000000?style=for-the-badge&logo=fastify&logoColor=white)
+![API REST](https://shields.io)
 
 # Aplicação Web de Receitas (CookHub)
 
