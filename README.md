@@ -2,7 +2,7 @@
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Fastify](https://img.shields.io/badge/Fastify-000000?style=for-the-badge&logo=fastify&logoColor=white)
-![API REST](https://shields.io)
+![API REST](https://img.shields.io/badge/API_REST-02569B?style=for-the-badge)
 
 # Aplicação Web de Receitas (CookHub)
 
